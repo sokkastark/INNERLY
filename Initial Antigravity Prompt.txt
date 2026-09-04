@@ -1,0 +1,509 @@
+# INNERLY — Initial Product & Engineering Brief
+
+We are building **Innerly**, an India-first educational and decision-support Progressive Web App (PWA) focused entirely on **innerwear knowledge and guidance**.
+
+## 1. Product Vision
+
+Innerly helps people understand:
+
+* what different types of innerwear are
+* why different types exist
+* where and when they are useful
+* how innerwear relates to the wearer's body
+* how innerwear works with different outerwear
+* how occasion, activity, comfort and fabric affect the choice
+* what common fit/comfort/visibility problems mean
+* how to make an informed decision independently
+
+Innerly is **NOT an online store**.
+
+Innerly is **NOT a lingerie brand**.
+
+Innerly is **NOT primarily a shopping website**.
+
+Innerly is **NOT a chatbot-first product**.
+
+Innerly is a **free educational and guided recommendation tool**.
+
+Product recommendations may be added later as a secondary, optional feature. They must never drive the product experience. If affiliate requirements conflict with Innerly's user-first philosophy, recommendations/affiliate functionality must be removable without affecting the core application.
+
+The core value of Innerly must remain useful even with zero commercial links.
+
+---
+
+# 2. Product Philosophy
+
+The fundamental principle is:
+
+> **Educate first. Guide second. Let the user decide.**
+
+Never manipulate the user into:
+
+* clicking
+* purchasing
+* continuing a flow
+* watching content
+* opening external links
+
+Avoid:
+
+* forced popups
+* misleading buttons
+* dark patterns
+* autoplay
+* fake urgency
+* aggressive affiliate CTAs
+* intrusive advertising
+
+The user should always understand:
+
+* where they are
+* what they are learning
+* why a recommendation was made
+* what they can do next
+* how to leave the flow
+
+---
+
+# 3. Target Platforms
+
+Innerly is a **PWA**, not a native Android application.
+
+Target:
+
+1. Mobile — primary
+2. Tablet
+3. Desktop
+
+The implementation must therefore be fully responsive.
+
+Do NOT create separate mobile and desktop applications.
+
+Use one responsive application with adaptive layouts.
+
+The PWA should support:
+
+* installability
+* responsive layouts
+* appropriate manifest configuration
+* service worker/offline capability where appropriate
+* fast loading
+* accessible touch interactions
+* keyboard/mouse interactions on desktop
+
+---
+
+# 4. Visual Direction
+
+Use this website as a visual reference for the general aesthetic:
+
+https://ecommerce-codex-demo.vercel.app/clothes
+
+Reference only the visual language:
+
+* color atmosphere
+* typography direction
+* spacing
+* card treatment
+* editorial fashion feel
+* premium simplicity
+* image presentation
+* responsive composition
+
+Do NOT copy its implementation, branding, content, assets, or exact UI.
+
+Innerly must have its own information architecture and UX.
+
+Desired visual character:
+
+* calm
+* elegant
+* educational
+* modern
+* premium
+* approachable
+* non-sexualized
+* trustworthy
+
+Avoid making Innerly visually resemble an adult-content website or an aggressive lingerie advertisement.
+
+---
+
+# 5. Homepage Direction
+
+The homepage is:
+
+## "Start from what you know"
+
+The user should NOT be forced to type a question.
+
+Do not make a chatbot or search box the primary interaction.
+
+Instead, provide guided discovery.
+
+Primary entry points:
+
+### Know My Body
+
+Explore:
+
+* body shapes
+* breast shapes
+* hip shapes
+
+### Explore Bras
+
+Explore:
+
+* bra types
+* fit
+* support
+* coverage
+* use cases
+* common problems
+
+### Explore Panties
+
+Explore:
+
+* panty types
+* coverage
+* fit
+* comfort
+* visibility
+* use cases
+
+### Match My Outfit
+
+The user selects information they already know.
+
+For example:
+
+Outerwear:
+
+* Saree
+* Chudidar
+* Kurti
+* Shirt
+* T-shirt
+* Top & Jeans
+* Dress
+* Bodycon
+* Swimwear
+* etc.
+
+Then:
+
+Occasion/activity:
+
+* Home
+* Office
+* Travel
+* Wedding
+* Party
+* Date
+* Beach
+* Swimming
+* Gym
+* etc.
+
+Then optional personal information where relevant.
+
+The system provides innerwear guidance.
+
+It must explain WHY.
+
+---
+
+# 6. Secondary Discovery
+
+Users should also be able to enter Innerly from the opposite direction.
+
+Examples:
+
+Body → Breast shape → Bra types → Usage → Outfit compatibility
+
+Bra type → What is it? → Why does it exist? → When is it useful?
+
+Panty type → Coverage → Fit → When it may be useful
+
+Fabric → Characteristics → Innerwear applications → Situations
+
+Problem → Possible causes → Things to understand → Relevant innerwear considerations
+
+This creates a connected knowledge system rather than isolated pages.
+
+---
+
+# 7. Initial Main Navigation
+
+Start with:
+
+* Home
+* Explore
+* Body
+* Match
+* Learn
+
+Do not create unnecessary navigation items.
+
+The navigation can evolve later.
+
+---
+
+# 8. Initial Knowledge Domains
+
+Create the architecture so these domains can grow independently.
+
+## BODY
+
+* Body shapes
+* Breast shapes
+* Hip shapes
+
+## BRA
+
+* Types
+* Fit
+* Support
+* Coverage
+* Usage
+* Common problems
+
+## PANTY
+
+* Types
+* Fit
+* Coverage
+* Comfort
+* Usage
+* Common problems
+
+## FABRICS
+
+Examples:
+
+* Cotton
+* Modal
+* Microfiber
+* Nylon
+* Elastane/Spandex
+* Lace
+* Blends
+* Performance fabrics
+
+## OUTERWEAR
+
+Examples:
+
+* Saree
+* Chudidar
+* Kurti
+* Shirt
+* T-shirt
+* Top & Jeans
+* Dress
+* Bodycon
+* Swimwear
+
+These are NOT fashion recommendations.
+
+They exist only as context for innerwear guidance.
+
+## OCCASIONS / ACTIVITIES
+
+Examples:
+
+* Home
+* Office
+* Travel
+* Wedding
+* Party
+* Date
+* Beach
+* Swimming
+* Gym
+
+## PROBLEMS
+
+Examples:
+
+* visible straps
+* visible lines
+* cup gap
+* spillage
+* discomfort
+* sweating
+* chafing
+* movement/support concerns
+
+The knowledge model must remain extensible.
+
+---
+
+# 9. Recommendation Philosophy
+
+The recommendation system should NOT initially be an AI system.
+
+Build a deterministic, explainable recommendation architecture first.
+
+Conceptually:
+
+INPUT
+→ relevant knowledge
+→ rules
+→ scoring/considerations
+→ recommendation
+→ explanation
+
+Example:
+
+Outerwear + Occasion + User preference
+→ relevant innerwear characteristics
+→ matching rules
+→ recommendation
+→ "Why this may work"
+
+The system must be explainable.
+
+Avoid black-box recommendations in the initial implementation.
+
+---
+
+# 10. Future Expansion
+
+Architect for future capabilities without implementing everything now.
+
+Possible future features:
+
+* more advanced recommendation engine
+* scoring
+* confidence indicators
+* saved journeys
+* personalization
+* optional affiliate product references
+* community knowledge
+* AI assistance
+
+Do NOT implement future features merely because the architecture could support them.
+
+Build only what is required for the current milestone.
+
+---
+
+# 11. Current Development Goal
+
+Before implementing the full application:
+
+### FIRST:
+
+Design and establish:
+
+1. application architecture
+2. folder structure
+3. route/page structure
+4. component architecture
+5. design-token architecture
+6. data architecture
+7. domain/model architecture
+8. recommendation-engine architecture
+9. responsive layout architecture
+10. PWA architecture
+11. accessibility architecture
+12. testing architecture
+13. documentation architecture
+
+Only after the architecture is reviewed and coherent should implementation begin.
+
+Do not generate a large amount of UI code immediately.
+
+---
+
+# 12. Engineering Standard
+
+Use:
+
+* TypeScript
+* strict typing
+* reusable components
+* feature-oriented architecture
+* domain-oriented data structures
+* separation of UI, business logic and data
+* accessible semantic HTML
+* responsive design
+* testable business logic
+* maintainable documentation
+
+Avoid:
+
+* giant components
+* duplicated components
+* hardcoded recommendation logic inside JSX
+* hardcoded content scattered throughout pages
+* deeply coupled components
+* unnecessary global state
+* magic numbers
+* inline business rules
+* copy-pasted UI
+
+---
+
+# 13. File Size Rule
+
+No source code file should exceed **500 lines**.
+
+If a file approaches the limit, refactor it into:
+
+* smaller components
+* hooks
+* services
+* domain modules
+* utilities
+* data modules
+
+Do not artificially split files just to satisfy the number. Split according to responsibility.
+
+---
+
+# 14. Important Principle
+
+Do not over-engineer Innerly.
+
+Architecture must support growth while keeping the MVP understandable.
+
+Every abstraction must have a reason.
+
+Before adding a new library, framework, service or dependency, evaluate whether the existing stack can solve the requirement.
+
+---
+
+# 15. First Deliverable
+
+Do NOT start by building the complete homepage.
+
+First produce:
+
+### Architecture Proposal
+
+Show:
+
+1. proposed tech stack
+2. folder structure
+3. route structure
+4. domain structure
+5. component hierarchy
+6. data model
+7. recommendation-engine structure
+8. design-token structure
+9. PWA structure
+10. testing strategy
+11. accessibility strategy
+12. future extension points
+
+Explain the responsibility of each major folder.
+
+After the architecture is established, begin implementing the foundation and then the homepage:
+
+# HOME — "Start from what you know"
+
+Do not proceed into large-scale feature implementation until the architecture is internally consistent.
