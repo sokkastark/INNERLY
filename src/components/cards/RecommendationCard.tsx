@@ -1,7 +1,7 @@
 import React from 'react';
 import { MatchResult } from '../../domain/models/recommendation';
 import { Badge } from '../ui/Badge';
-import { CheckCircle2, AlertCircle, Info } from 'lucide-react';
+import { CheckCircle2, Info, HelpCircle } from 'lucide-react';
 
 interface RecommendationCardProps {
   result: MatchResult;
@@ -48,15 +48,15 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({ result }
         </div>
       )}
 
-      {/* Limitations (if applicable) */}
-      {result.limitations && result.limitations.length > 0 && (
-        <div style={{ backgroundColor: 'var(--color-bg-tier-not-ideal)', padding: 'var(--space-sm) var(--space-md)', borderRadius: 'var(--radius-sm)' }}>
-          <h4 style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-tier-not-ideal)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-            <AlertCircle size={14} /> When not ideal
+      {/* Signature: What Innerly Can't Tell You */}
+      {result.cannotDetermine && result.cannotDetermine.length > 0 && (
+        <div style={{ borderTop: '1px dashed var(--color-border-subtle)', paddingTop: 'var(--space-sm)' }}>
+          <h4 style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+            <HelpCircle size={14} color="var(--color-text-muted)" /> What Innerly can't determine from this info:
           </h4>
-          <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: 'var(--font-size-xs)', color: 'var(--color-tier-not-ideal)' }}>
-            {result.limitations.map((lim, idx) => (
-              <li key={idx}>{lim}</li>
+          <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+            {result.cannotDetermine.map((item, idx) => (
+              <li key={idx}>{item}</li>
             ))}
           </ul>
         </div>

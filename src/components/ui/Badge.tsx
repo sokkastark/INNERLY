@@ -1,39 +1,34 @@
 import React from 'react';
-import { MatchTier } from '../../domain/models/recommendation';
+import { RelevanceTier } from '../../domain/models/recommendation';
 
 interface BadgeProps {
-  tier?: MatchTier;
+  tier?: RelevanceTier;
   label?: string;
   variant?: 'neutral' | 'accent';
 }
 
 export const Badge: React.FC<BadgeProps> = ({ tier, label, variant = 'neutral' }) => {
   if (tier) {
-    const tierConfig: Record<MatchTier, { text: string; bg: string; color: string }> = {
-      recommended: {
-        text: 'Recommended Consideration',
+    const tierConfig: Record<RelevanceTier, { text: string; bg: string; color: string }> = {
+      highly_relevant: {
+        text: 'Highly Relevant',
         bg: 'var(--color-bg-tier-recommended)',
         color: 'var(--color-tier-recommended)'
       },
-      good_match: {
-        text: 'Good Match',
+      good_option: {
+        text: 'Good Option',
         bg: 'var(--color-bg-tier-good)',
         color: 'var(--color-tier-good)'
       },
-      conditional: {
+      may_work: {
         text: 'May Work Depending on Fit',
         bg: 'var(--color-bg-tier-conditional)',
         color: 'var(--color-tier-conditional)'
       },
-      considerations: {
-        text: 'Things to Consider',
-        bg: 'var(--color-bg-tier-consideration)',
-        color: 'var(--color-tier-consideration)'
-      },
-      not_ideal: {
-        text: 'Not Ideal for this Context',
-        bg: 'var(--color-bg-tier-not-ideal)',
-        color: 'var(--color-tier-not-ideal)'
+      less_relevant: {
+        text: 'Less Relevant to this Situation',
+        bg: 'var(--color-bg-subtle)',
+        color: 'var(--color-text-muted)'
       }
     };
 

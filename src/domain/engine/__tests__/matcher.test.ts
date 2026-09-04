@@ -1,33 +1,28 @@
 import { describe, it, expect } from 'vitest';
 import { evaluateUserContext } from '../matcher';
 
-describe('Innerly Decision Engine', () => {
-  it('evaluates partial input: Outfit only (Saree)', () => {
-    const output = evaluateUserContext({ outfitId: 'saree' });
-    expect(output.hasResults).toBe(true);
-    expect(output.contextSummary).toContain('Saree & Blouse');
-    const recommendedBra = output.results.find(
-      (r) => r.itemTypeCategory === 'bra' && r.tier === 'good_match'
-    );
-    expect(recommendedBra).toBeDefined();
+describe('Innerly Decision Engine - Refined Logic', () => {
+  it('marks Sports Bra as less_relevant for Saree context', () => {
+    const output = evaluateUserContext({ outfitId: 'saree', scope: 'bras' });
+    const sportsBra = output.results.find((r) => r.itemTypeId === 'sports_bra');
+    expect(sportsBra?.tier).toBe('less_relevant');
   });
 
-  it('evaluates compound input: Saree + Wedding', () => {
-    const output = evaluateUserContext({
-      outfitId: 'saree',
-      occasionId: 'wedding_festive'
-    });
-    expect(output.contextSummary).toContain('Saree');
-    expect(output.contextSummary).toContain('Wedding');
-    
-    const multiwayBra = output.results.find((r) => r.itemTypeId === 'multiway_strapless');
-    expect(multiwayBra?.tier).toBe('recommended');
-    expect(multiwayBra?.why[0]).toContain('Multiway');
+  it('marks Convertible/Strapless as highly_relevant for Saree context', () => {
+    const output = evaluateUserContext({ outfitId: 'saree', scope: 'bras' });
+    const multiway = output.results.find((r) => r.itemTypeId === 'convertible_multiway');
+    expect(multiway?.tier).toBe('highly_relevant');
   });
 
-  it('evaluates problem-based partial input: Visible Straps', () => {
-    const output = evaluateUserContext({ problemId: 'visible_straps' });
-    const match = output.results.find((r) => r.itemTypeId === 'multiway_strapless');
-    expect(match?.tier).toBe('recommended');
+  it('enforces scope isolation when scope is bras', () => {
+    const output = evaluateUserContext({ outfitId: 'saree', scope: 'bras' });
+    const pantyItems = output.results.filter((r) => r.itemTypeCategory === 'panty');
+    expect(pantyItems.length).toBe(0);
+  });
+
+  it('includes signature cannotDetermine field in recommendation results', () => {
+    const output = evaluateUserContext({ outfitId: 'tshirt' });
+    expect(output.results[0].cannotDetermine).toBeDefined();
+    expect(output.results[0].cannotDetermine.length).toBeGreaterThan(0);
   });
 });

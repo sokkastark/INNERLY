@@ -1,4 +1,4 @@
-import { UserContext, RecommendationOutput, MatchResult } from '../models/recommendation';
+import { UserContext, RecommendationOutput, MatchResult, RelevanceTier } from '../models/recommendation';
 import { BRA_TYPES } from '../../data/bras';
 import { PANTY_TYPES } from '../../data/panties';
 import { OUTFIT_ITEMS } from '../../data/outfits';
@@ -7,12 +7,13 @@ import { FIT_PROBLEMS } from '../../data/problems';
 import { EXPLANATION_TEMPLATES } from '../../content/explanations';
 
 /**
- * Deterministic Decision Engine for Innerly
- * Supports partial inputs (Outfit only, Occasion only, Problem only, Body only, etc.)
+ * Refined Decision Engine for Innerly
+ * Separates Relevance from Suitability, enforces Scope Isolation, and includes signature limits.
  */
 export function evaluateUserContext(context: UserContext): RecommendationOutput {
   const results: MatchResult[] = [];
   const contextParts: string[] = [];
+  const activeScope = context.scope || 'all';
 
   const outfit = OUTFIT_ITEMS.find((o) => o.id === context.outfitId);
   const occasion = OCCASIONS.find((oc) => oc.id === context.occasionId);
@@ -26,103 +27,128 @@ export function evaluateUserContext(context: UserContext): RecommendationOutput 
     ? contextParts.join(' • ')
     : 'General Innerwear Exploration';
 
-  // Evaluate Bras based on Outfit and/or Occasion and/or Problem
-  BRA_TYPES.forEach((bra) => {
-    let tier: MatchResult['tier'] = 'good_match';
-    const why: string[] = [];
-    const considerations: string[] = [];
-    const limitations: string[] = [];
+  // Evaluate Bras if scope is 'all' or 'bras'
+  if (activeScope === 'all' || activeScope === 'bras') {
+    BRA_TYPES.forEach((bra) => {
+      let tier: RelevanceTier = 'good_option';
+      const why: string[] = [];
+      const considerations: string[] = [];
+      const cannotDetermine: string[] = [...EXPLANATION_TEMPLATES.generalFallback.cannotDetermine];
 
-    // Rule: Saree + Wedding context
-    if (context.outfitId === 'saree' && context.occasionId === 'wedding_festive') {
-      if (bra.id === 'multiway_strapless') {
-        tier = 'recommended';
-        why.push(...EXPLANATION_TEMPLATES.sareeWedding.recommendedWhy);
-        considerations.push(...EXPLANATION_TEMPLATES.sareeWedding.considerations);
-      } else if (bra.id === 'full_coverage_everyday') {
-        tier = 'good_match';
-        why.push('Provides high bust support and modest coverage for long traditional drapes.');
-        considerations.push('Verify blouse back cut to avoid strap exposure.');
-      } else if (bra.id === 'bralette') {
-        tier = 'not_ideal';
-        why.push('Light support may feel inadequate under heavy saree fabric.');
+      // Saree Context
+      if (context.outfitId === 'saree') {
+        if (bra.id === 'convertible_multiway' || bra.id === 'strapless_bra') {
+          tier = 'highly_relevant';
+          why.push(...EXPLANATION_TEMPLATES.sareeWedding.recommendedWhy);
+          considerations.push(...EXPLANATION_TEMPLATES.sareeWedding.considerations);
+          cannotDetermine.push(...EXPLANATION_TEMPLATES.sareeWedding.cannotDetermine);
+        } else if (bra.id === 'tshirt_bra' || bra.id === 'full_coverage_bra') {
+          tier = 'good_option';
+          why.push('Provides smooth cup surface or full support under traditional saree blouse cuts.');
+          considerations.push('Verify blouse back neck depth to ensure straps remain hidden.');
+        } else if (bra.id === 'sports_bra') {
+          tier = 'less_relevant';
+          why.push('Sports bras are engineered for athletic bounce control and are not typically styled for saree blouses.');
+        } else if (bra.id === 'bralette') {
+          tier = 'may_work';
+          why.push('Lightweight comfort for home/casual wear, but offers minimal support under heavy saree drapes.');
+        }
       }
-    }
-    // Rule: T-Shirt / Fitted Top
-    else if (context.outfitId === 'tshirt') {
-      if (bra.id === 'tshirt_bra') {
-        tier = 'recommended';
-        why.push(...EXPLANATION_TEMPLATES.tshirtEveryday.recommendedWhy);
-        considerations.push(...EXPLANATION_TEMPLATES.tshirtEveryday.considerations);
-      } else if (bra.id === 'full_coverage_everyday' && bra.paddingType === 'unpadded') {
-        tier = 'considerations';
-        why.push('Breathable for daily wear, but visible cup seams may show under thin jersey tops.');
+      // T-Shirt Context
+      else if (context.outfitId === 'tshirt') {
+        if (bra.id === 'tshirt_bra') {
+          tier = 'highly_relevant';
+          why.push(...EXPLANATION_TEMPLATES.tshirtEveryday.recommendedWhy);
+          considerations.push(...EXPLANATION_TEMPLATES.tshirtEveryday.considerations);
+          cannotDetermine.push(...EXPLANATION_TEMPLATES.tshirtEveryday.cannotDetermine);
+        } else if (bra.id === 'full_coverage_bra') {
+          tier = 'may_work';
+          why.push('Offers great support, but visible cup seams may show under thin jersey fabrics.');
+        } else if (bra.id === 'sports_bra') {
+          tier = context.occasionId === 'gym_sports' ? 'highly_relevant' : 'less_relevant';
+          if (tier === 'less_relevant') {
+            why.push('Sports bras prioritize bounce control over low-profile everyday tops.');
+          }
+        }
       }
-    }
-    // Rule: Gym Activewear
-    else if (context.outfitId === 'gym_wear' || context.occasionId === 'gym_sports') {
-      if (bra.id === 'sports_bra') {
-        tier = 'recommended';
-        why.push(...EXPLANATION_TEMPLATES.gymActive.recommendedWhy);
-        considerations.push(...EXPLANATION_TEMPLATES.gymActive.considerations);
-      } else if (bra.id !== 'sports_bra') {
-        tier = 'not_ideal';
-        why.push('Standard daily bras do not provide bounce control required for workout impact.');
+      // Gym Context
+      else if (context.outfitId === 'gym_wear' || context.occasionId === 'gym_sports') {
+        if (bra.id === 'sports_bra') {
+          tier = 'highly_relevant';
+          why.push(...EXPLANATION_TEMPLATES.gymActive.recommendedWhy);
+          considerations.push(...EXPLANATION_TEMPLATES.gymActive.considerations);
+        } else {
+          tier = 'less_relevant';
+          why.push('Standard everyday bras do not provide the bounce control or sweat management required for active movement.');
+        }
       }
-    }
-    // Partial Rule: Problem based matching
-    else if (context.problemId === 'visible_lines' && bra.id === 'tshirt_bra') {
-      tier = 'recommended';
-      why.push('Molded smooth cups eliminate cup seam outlines under thin clothing.');
-    }
-    else if (context.problemId === 'visible_straps' && bra.id === 'multiway_strapless') {
-      tier = 'recommended';
-      why.push('Detachable straps allow strapless or criss-cross positions to stay hidden.');
-    }
-    // Default matching fallback for partial outfit context
-    else if (outfit && bra.suitableOutfits.includes(outfit.id)) {
-      tier = 'good_match';
-      why.push(`Commonly paired with ${outfit.name} for balanced support and shape.`);
-      considerations.push(...outfit.keyConsiderations);
-    }
+      // Problem-Specific Context
+      else if (context.problemId === 'visible_lines') {
+        if (bra.id === 'tshirt_bra') {
+          tier = 'highly_relevant';
+          why.push('Smooth molded cups minimize seam outlines under thin fabrics.');
+        } else if (bra.id === 'full_coverage_bra') {
+          tier = 'may_work';
+          why.push('Stitched cup seams may show through lightweight clothing.');
+        }
+      } else if (context.problemId === 'visible_straps') {
+        if (bra.id === 'strapless_bra' || bra.id === 'convertible_multiway') {
+          tier = 'highly_relevant';
+          why.push('Detachable or repositionable straps keep bra straps hidden under complex necklines.');
+        }
+      }
 
-    results.push({
-      itemTypeId: bra.id,
-      itemTypeCategory: 'bra',
-      itemName: bra.name,
-      tier,
-      why: why.length > 0 ? why : [bra.shortDescription],
-      considerations: considerations.length > 0 ? considerations : bra.characteristics,
-      limitations: limitations.length > 0 ? limitations : undefined
+      results.push({
+        itemTypeId: bra.id,
+        itemTypeCategory: 'bra',
+        itemName: bra.name,
+        tier,
+        why: why.length > 0 ? why : [bra.shortDescription],
+        considerations: considerations.length > 0 ? considerations : bra.typicalConstruction,
+        cannotDetermine: Array.from(new Set(cannotDetermine))
+      });
     });
-  });
+  }
 
-  // Evaluate Panties if Outfit or Problem context provided
-  PANTY_TYPES.forEach((panty) => {
-    let tier: MatchResult['tier'] = 'good_match';
-    const why: string[] = [];
+  // Evaluate Panties if scope is 'all' or 'panties'
+  if (activeScope === 'all' || activeScope === 'panties') {
+    PANTY_TYPES.forEach((panty) => {
+      let tier: RelevanceTier = 'good_option';
+      const why: string[] = [];
 
-    if (context.outfitId === 'bodycon' && panty.id === 'seamless_hipster') {
-      tier = 'recommended';
-      why.push('Laser-cut seamless edges prevent visible panty lines under fitted dresses.');
-    } else if (context.outfitId === 'saree' && panty.id === 'high_waist_brief') {
-      tier = 'recommended';
-      why.push('High waist rise sits securely beneath petticoat drawstrings without rolling down.');
-    }
+      if (context.outfitId === 'bodycon' || context.problemId === 'visible_lines') {
+        if (panty.id === 'seamless_hipster') {
+          tier = 'highly_relevant';
+          why.push('Laser-cut or bonded flat edges significantly reduce visible panty lines (VPL).');
+        }
+      } else if (context.outfitId === 'saree') {
+        if (panty.id === 'high_waist_brief') {
+          tier = 'highly_relevant';
+          why.push('High waist rise sits securely beneath petticoat drawstrings without rolling down.');
+        } else if (panty.id === 'boyshorts') {
+          tier = 'good_option';
+          why.push('Extends lower down the leg to reduce inner thigh friction during long walking periods.');
+        }
+      }
 
-    results.push({
-      itemTypeId: panty.id,
-      itemTypeCategory: 'panty',
-      itemName: panty.name,
-      tier,
-      why: why.length > 0 ? why : [panty.shortDescription],
-      considerations: panty.characteristics
+      results.push({
+        itemTypeId: panty.id,
+        itemTypeCategory: 'panty',
+        itemName: panty.name,
+        tier,
+        why: why.length > 0 ? why : [panty.shortDescription],
+        considerations: panty.typicalConstruction,
+        cannotDetermine: [
+          'Whether panty lines will be completely invisible without testing under your specific outer fabric.'
+        ]
+      });
     });
-  });
+  }
 
   return {
     hasResults: results.length > 0,
     contextSummary,
+    activeScope,
     results
   };
 }

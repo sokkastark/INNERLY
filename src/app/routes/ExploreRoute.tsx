@@ -58,15 +58,15 @@ export const ExploreRoute: React.FC = () => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                  <Badge label={`Coverage: ${bra.coverageLevel}`} />
-                  <Badge label={`Support: ${bra.supportLevel}`} />
-                  <Badge label={`Wire: ${bra.wireType}`} />
+                  <Badge label={`Coverage: ${bra.coverageRange}`} />
+                  <Badge label={`Support: ${bra.supportRange}`} />
+                  <Badge label={`Wire: ${bra.wireOptions}`} />
                 </div>
 
                 <div>
-                  <h4 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, marginBottom: '6px' }}>Key Characteristics:</h4>
+                  <h4 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, marginBottom: '6px' }}>Typical Construction:</h4>
                   <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-                    {bra.characteristics.map((c: string, i: number) => (
+                    {bra.typicalConstruction.map((c: string, i: number) => (
                       <li key={i}>{c}</li>
                     ))}
                   </ul>
@@ -84,14 +84,13 @@ export const ExploreRoute: React.FC = () => {
 
                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                   <Badge label={`Coverage: ${panty.coverage}`} />
-                  <Badge label={`Waist Rise: ${panty.waistRise}`} />
-                  {panty.seamlessAvailable && <Badge label="Seamless Finish Available" variant="accent" />}
+                  <Badge label={`Rise: ${panty.typicalRise}`} />
                 </div>
 
                 <div>
-                  <h4 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, marginBottom: '6px' }}>Key Features:</h4>
+                  <h4 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, marginBottom: '6px' }}>Typical Construction:</h4>
                   <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-                    {panty.characteristics.map((c: string, i: number) => (
+                    {panty.typicalConstruction.map((c: string, i: number) => (
                       <li key={i}>{c}</li>
                     ))}
                   </ul>

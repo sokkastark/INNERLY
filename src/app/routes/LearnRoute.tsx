@@ -8,7 +8,7 @@ export const LearnRoute: React.FC = () => {
       <div>
         <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: 'var(--space-xs)' }}>Troubleshoot & Learn</h1>
         <p style={{ color: 'var(--color-text-muted)' }}>
-          Practical educational guides to diagnose common fit discomforts, seam lines, and strap issues.
+          Understand common fit issues, visible lines, strap concerns, and underwire pressure points.
         </p>
       </div>
 
@@ -21,7 +21,7 @@ export const LearnRoute: React.FC = () => {
             </div>
 
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-              <strong>Symptom:</strong> {problem.symptom}
+              <strong>Observed Symptom:</strong> {problem.symptom}
             </p>
 
             <div>
@@ -37,7 +37,7 @@ export const LearnRoute: React.FC = () => {
 
             <div style={{ backgroundColor: 'var(--color-bg-subtle)', padding: 'var(--space-md)', borderRadius: 'var(--radius-sm)' }}>
               <h4 style={{ fontSize: 'var(--font-size-xs)', fontWeight: 600, color: 'var(--color-brand-primary)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
-                <CheckCircle size={14} /> Recommended Action Steps:
+                <CheckCircle size={14} /> Practical Things to Consider:
               </h4>
               <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: 'var(--font-size-xs)', color: 'var(--color-text-primary)' }}>
                 {problem.checkpoints.map((cp: string, i: number) => (

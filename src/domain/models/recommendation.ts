@@ -1,13 +1,13 @@
-// Recommendation & Matcher Domain Models
+// Refined Recommendation & Matcher Domain Models
 
-export type MatchTier =
-  | 'recommended'       // Recommended consideration
-  | 'good_match'        // Good match
-  | 'conditional'       // May work depending on fit
-  | 'considerations'    // Things to consider
-  | 'not_ideal';        // Not ideal for this situation
+export type RelevanceTier =
+  | 'highly_relevant'   // Directly addresses the user's specific situation
+  | 'good_option'       // Generally appropriate option
+  | 'may_work'          // Could work depending on fit, garment cut, or fabric
+  | 'less_relevant';     // Not relevant to the selected situation
 
 export interface UserContext {
+  scope?: 'all' | 'bras' | 'panties'; // Question scope isolation
   outfitId?: string;
   occasionId?: string;
   problemId?: string;
@@ -23,14 +23,15 @@ export interface MatchResult {
   itemTypeId: string;
   itemTypeCategory: 'bra' | 'panty' | 'fabric';
   itemName: string;
-  tier: MatchTier;
-  why: string[];               // Primary reasons explaining the match
+  tier: RelevanceTier;
+  why: string[];               // What characteristic of the situation caused this recommendation
   considerations: string[];   // Key fit, fabric, or strap details to check
-  limitations?: string[];      // When to avoid this choice
+  cannotDetermine: string[];  // Signature "What Innerly can't tell you from this info"
 }
 
 export interface RecommendationOutput {
   hasResults: boolean;
-  contextSummary: string;       // Summary of user's query context (e.g. "Saree + Wedding")
+  contextSummary: string;
+  activeScope: 'all' | 'bras' | 'panties';
   results: MatchResult[];
 }

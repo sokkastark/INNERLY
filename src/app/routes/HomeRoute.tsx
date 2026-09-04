@@ -19,7 +19,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
             Start from what you know. Decide with confidence.
           </h1>
           <p style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
-            Innerly helps you understand fits, fabrics, outerwear compatibility, and comfort — without dark patterns, forced popups, or shopping pressures.
+            Innerly helps you understand what works underneath what you're wearing — fits, fabrics, and comfort without dark patterns or commercial pressures.
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
@@ -33,7 +33,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Guided Discovery Cards: Start from what you know */}
+      {/* Guided Discovery Cards */}
       <section className="container">
         <div style={{ marginBottom: 'var(--space-xl)' }}>
           <h2 style={{ fontSize: 'var(--font-size-2xl)', marginBottom: 'var(--space-xs)' }}>Start from what you know</h2>
@@ -53,7 +53,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
             <div>
               <h3 style={{ fontSize: 'var(--font-size-lg)', marginBottom: '4px' }}>Match My Outfit</h3>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-                Select a garment (Saree, Kurti, T-Shirt, Bodycon) and occasion to discover ideal innerwear types with clear explanations.
+                Select a garment (Saree, Kurti, T-Shirt, Bodycon) and occasion to discover what works underneath.
               </p>
             </div>
             <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-brand-primary)', marginTop: 'auto' }}>
@@ -61,7 +61,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
             </span>
           </div>
 
-          {/* Card 2: Explore Bras & Panties */}
+          {/* Card 2: Explore Types */}
           <div
             className="card-surface"
             onClick={() => onNavigate('explore')}
@@ -73,7 +73,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
             <div>
               <h3 style={{ fontSize: 'var(--font-size-lg)', marginBottom: '4px' }}>Explore Types</h3>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-                Learn what different bra and panty types exist, why they were designed, and where they perform best.
+                Learn what different bra and panty types exist, how they are constructed, and where they perform best.
               </p>
             </div>
             <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-brand-primary)', marginTop: 'auto' }}>
@@ -93,7 +93,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
             <div>
               <h3 style={{ fontSize: 'var(--font-size-lg)', marginBottom: '4px' }}>Know My Body</h3>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-                Understand breast shapes, tissue distribution, and hip rises to select pressure-free options.
+                Progressive beginner-first guide to breast shape, tissue distribution, and posture comfort.
               </p>
             </div>
             <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-brand-primary)', marginTop: 'auto' }}>
@@ -101,7 +101,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
             </span>
           </div>
 
-          {/* Card 4: Troubleshoot Problems */}
+          {/* Card 4: Troubleshoot Issues */}
           <div
             className="card-surface"
             onClick={() => onNavigate('learn')}
@@ -113,7 +113,7 @@ export const HomeRoute: React.FC<HomeRouteProps> = ({ onNavigate }) => {
             <div>
               <h3 style={{ fontSize: 'var(--font-size-lg)', marginBottom: '4px' }}>Solve Fit Issues</h3>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-                Troubleshoot strap slipping, visible seam lines, underwire dig-in, or heat chafing.
+                Understand strap slipping, visible seam lines, underwire dig-in, or heat chafing.
               </p>
             </div>
             <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-brand-primary)', marginTop: 'auto' }}>

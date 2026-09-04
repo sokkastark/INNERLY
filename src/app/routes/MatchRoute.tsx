@@ -6,12 +6,16 @@ import { OCCASIONS } from '../../data/occasions';
 import { FIT_PROBLEMS } from '../../data/problems';
 import { RecommendationCard } from '../../components/cards/RecommendationCard';
 import { Button } from '../../components/ui/Button';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Filter } from 'lucide-react';
 
 export const MatchRoute: React.FC = () => {
-  const [context, setContext] = useState<UserContext>({});
+  const [context, setContext] = useState<UserContext>({ scope: 'all' });
+  const [showLessRelevant, setShowLessRelevant] = useState(false);
 
   const output = evaluateUserContext(context);
+
+  const relevantResults = output.results.filter((r) => r.tier !== 'less_relevant');
+  const lessRelevantResults = output.results.filter((r) => r.tier === 'less_relevant');
 
   const handleSelectOutfit = (outfitId: string) => {
     setContext((prev) => ({
@@ -34,8 +38,12 @@ export const MatchRoute: React.FC = () => {
     }));
   };
 
+  const handleScopeChange = (scope: 'all' | 'bras' | 'panties') => {
+    setContext((prev) => ({ ...prev, scope }));
+  };
+
   const handleReset = () => {
-    setContext({});
+    setContext({ scope: 'all' });
   };
 
   return (
@@ -44,14 +52,59 @@ export const MatchRoute: React.FC = () => {
       <div>
         <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: 'var(--space-xs)' }}>Match My Outfit & Situation</h1>
         <p style={{ color: 'var(--color-text-muted)' }}>
-          Select what you know. You can pick just an outfit, an occasion, or a specific problem — all fields are optional.
+          Select what you know. All fields are optional. Choose whether you want to focus on bras, panties, or full outerwear guidance.
         </p>
       </div>
 
-      {/* Partial Input Selector Controls */}
+      {/* Question Scope Isolation Tabs */}
+      <div style={{ display: 'flex', gap: 'var(--space-xs)', alignItems: 'center' }}>
+        <span style={{ fontSize: 'var(--font-size-xs)', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', marginRight: '8px' }}>
+          Question Scope:
+        </span>
+        <button
+          onClick={() => handleScopeChange('all')}
+          style={{
+            padding: '6px 16px',
+            borderRadius: 'var(--radius-full)',
+            fontSize: 'var(--font-size-sm)',
+            fontWeight: (context.scope || 'all') === 'all' ? 600 : 400,
+            backgroundColor: (context.scope || 'all') === 'all' ? 'var(--color-brand-primary)' : 'var(--color-bg-subtle)',
+            color: (context.scope || 'all') === 'all' ? '#FFFFFF' : 'var(--color-text-primary)'
+          }}
+        >
+          Entire Outfit
+        </button>
+        <button
+          onClick={() => handleScopeChange('bras')}
+          style={{
+            padding: '6px 16px',
+            borderRadius: 'var(--radius-full)',
+            fontSize: 'var(--font-size-sm)',
+            fontWeight: context.scope === 'bras' ? 600 : 400,
+            backgroundColor: context.scope === 'bras' ? 'var(--color-brand-primary)' : 'var(--color-bg-subtle)',
+            color: context.scope === 'bras' ? '#FFFFFF' : 'var(--color-text-primary)'
+          }}
+        >
+          Bras Only
+        </button>
+        <button
+          onClick={() => handleScopeChange('panties')}
+          style={{
+            padding: '6px 16px',
+            borderRadius: 'var(--radius-full)',
+            fontSize: 'var(--font-size-sm)',
+            fontWeight: context.scope === 'panties' ? 600 : 400,
+            backgroundColor: context.scope === 'panties' ? 'var(--color-brand-primary)' : 'var(--color-bg-subtle)',
+            color: context.scope === 'panties' ? '#FFFFFF' : 'var(--color-text-primary)'
+          }}
+        >
+          Panties Only
+        </button>
+      </div>
+
+      {/* Input Selectors */}
       <div style={{ backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-lg)', display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
-        
-        {/* Step 1: Outfit Selection (Optional) */}
+        {/* Outfit Selection */}
         <div>
           <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-brand-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
             1. Outerwear / Garment (Optional)
@@ -69,9 +122,7 @@ export const MatchRoute: React.FC = () => {
                     fontSize: 'var(--font-size-sm)',
                     fontWeight: isSelected ? 600 : 400,
                     backgroundColor: isSelected ? 'var(--color-brand-primary)' : 'var(--color-bg-subtle)',
-                    color: isSelected ? '#FFFFFF' : 'var(--color-text-primary)',
-                    border: '1px solid transparent',
-                    transition: 'var(--transition-fast)'
+                    color: isSelected ? '#FFFFFF' : 'var(--color-text-primary)'
                   }}
                 >
                   {item.name}
@@ -81,7 +132,7 @@ export const MatchRoute: React.FC = () => {
           </div>
         </div>
 
-        {/* Step 2: Occasion Selection (Optional) */}
+        {/* Occasion Selection */}
         <div>
           <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-brand-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
             2. Occasion / Activity (Optional)
@@ -99,9 +150,7 @@ export const MatchRoute: React.FC = () => {
                     fontSize: 'var(--font-size-sm)',
                     fontWeight: isSelected ? 600 : 400,
                     backgroundColor: isSelected ? 'var(--color-brand-primary)' : 'var(--color-bg-subtle)',
-                    color: isSelected ? '#FFFFFF' : 'var(--color-text-primary)',
-                    border: '1px solid transparent',
-                    transition: 'var(--transition-fast)'
+                    color: isSelected ? '#FFFFFF' : 'var(--color-text-primary)'
                   }}
                 >
                   {item.name}
@@ -111,7 +160,7 @@ export const MatchRoute: React.FC = () => {
           </div>
         </div>
 
-        {/* Step 3: Specific Problem (Optional) */}
+        {/* Problem Selection */}
         <div>
           <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-brand-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
             3. Specific Issue to Address (Optional)
@@ -129,9 +178,7 @@ export const MatchRoute: React.FC = () => {
                     fontSize: 'var(--font-size-sm)',
                     fontWeight: isSelected ? 600 : 400,
                     backgroundColor: isSelected ? 'var(--color-brand-primary)' : 'var(--color-bg-subtle)',
-                    color: isSelected ? '#FFFFFF' : 'var(--color-text-primary)',
-                    border: '1px solid transparent',
-                    transition: 'var(--transition-fast)'
+                    color: isSelected ? '#FFFFFF' : 'var(--color-text-primary)'
                   }}
                 >
                   {item.title}
@@ -151,24 +198,43 @@ export const MatchRoute: React.FC = () => {
         )}
       </div>
 
-      {/* Results Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-sm)' }}>
-        <div>
-          <h2 style={{ fontSize: 'var(--font-size-xl)' }}>
-            Guidance for: <span style={{ color: 'var(--color-brand-primary)' }}>{output.contextSummary}</span>
-          </h2>
-          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-            Explainable match assessments categorized by suitability tier.
-          </p>
-        </div>
+      {/* Summary Header */}
+      <div>
+        <h2 style={{ fontSize: 'var(--font-size-xl)' }}>
+          Guidance for: <span style={{ color: 'var(--color-brand-primary)' }}>{output.contextSummary}</span>
+        </h2>
+        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+          Relevant considerations categorized by relevance tier.
+        </p>
       </div>
 
-      {/* Results Grid */}
+      {/* Relevant Results Grid */}
       <div className="grid sm:grid-cols-1 lg:grid-cols-2">
-        {output.results.map((res) => (
+        {relevantResults.map((res) => (
           <RecommendationCard key={res.itemTypeId} result={res} />
         ))}
       </div>
+
+      {/* Collapsible Less Relevant Items */}
+      {lessRelevantResults.length > 0 && (
+        <div style={{ marginTop: 'var(--space-lg)' }}>
+          <button
+            onClick={() => setShowLessRelevant(!showLessRelevant)}
+            style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
+            <Filter size={14} />
+            {showLessRelevant ? 'Hide options less relevant to this situation' : `Show ${lessRelevantResults.length} option(s) less relevant to this situation`}
+          </button>
+
+          {showLessRelevant && (
+            <div className="grid sm:grid-cols-1 lg:grid-cols-2" style={{ marginTop: 'var(--space-md)' }}>
+              {lessRelevantResults.map((res) => (
+                <RecommendationCard key={res.itemTypeId} result={res} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

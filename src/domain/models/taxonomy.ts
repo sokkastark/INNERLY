@@ -1,36 +1,40 @@
-// Taxonomy Data Models for Innerly
+// Taxonomy Models - Decoupling Type, Construction, Fabric, and Performance
+
+export type CoverageLevel = 'full' | 'three_quarter' | 'half' | 'demi' | 'minimal' | 'varies';
+export type SupportLevel = 'high' | 'medium' | 'light' | 'varies';
+export type WireType = 'underwire' | 'wireless' | 'both_available';
+export type RiseType = 'high_waist' | 'mid_rise' | 'low_rise';
 
 export interface BraType {
   id: string;
   name: string;
   shortDescription: string;
-  characteristics: string[];
-  coverageLevel: 'full' | 'three_quarter' | 'half' | 'demi' | 'minimal';
-  supportLevel: 'high' | 'medium' | 'light';
-  wireType: 'underwire' | 'wireless' | 'both_available';
-  paddingType: 'padded' | 'semi_padded' | 'unpadded' | 'removable';
-  suitableOutfits: string[]; // Outerwear IDs
-  commonProblemsSolved: string[]; // Problem IDs
+  typicalConstruction: string[];   // e.g., Molded cups, flat seams, side boning
+  coverageRange: CoverageLevel;    // Typical or varies
+  supportRange: SupportLevel;      // Varies by construction & fit
+  wireOptions: WireType;
+  fabricOptions: string[];         // e.g., Cotton, Modal, Microfiber
+  usefulFor: string[];             // Situations or outerwear IDs where relevant
+  limitations: string[];           // Honest limitations (e.g. Invisibility not 100% guaranteed)
 }
 
 export interface PantyType {
   id: string;
   name: string;
   shortDescription: string;
-  coverage: 'full' | 'moderate' | 'minimal' | 'thong';
-  waistRise: 'high_waist' | 'mid_rise' | 'low_rise';
-  characteristics: string[];
-  seamlessAvailable: boolean;
-  suitableOutfits: string[];
-  commonProblemsSolved: string[];
+  coverage: CoverageLevel;
+  typicalRise: RiseType;
+  typicalConstruction: string[];
+  fabricOptions: string[];
+  usefulFor: string[];
+  limitations: string[];
 }
 
 export interface FabricType {
   id: string;
   name: string;
   description: string;
-  breathability: 'high' | 'medium' | 'low';
-  stretch: 'high' | 'medium' | 'low';
+  characteristics: string[];
   bestForOccasions: string[];
   careNotes: string;
 }
@@ -38,9 +42,9 @@ export interface FabricType {
 export interface OuterwearItem {
   id: string;
   name: string;
-  category: 'traditional' | 'casual' | 'formal' | 'active' | 'fitted';
+  category: 'traditional_indian' | 'casual' | 'formal' | 'active' | 'fitted';
   description: string;
-  keyConsiderations: string[]; // e.g., necklines, back depth, transparency, cling
+  keyConsiderations: string[]; // e.g., blouse back depth, side slits, opacity
 }
 
 export interface OccasionItem {
@@ -48,7 +52,7 @@ export interface OccasionItem {
   name: string;
   activityLevel: 'restful' | 'moderate' | 'active' | 'high_intensity';
   typicalDurationHours: number;
-  keyNeeds: string[]; // e.g., breathability, posture support, invisible seams
+  keyNeeds: string[];
 }
 
 export interface FitProblem {
@@ -57,12 +61,4 @@ export interface FitProblem {
   symptom: string;
   possibleCauses: string[];
   checkpoints: string[];
-}
-
-export interface BodyFeature {
-  id: string;
-  category: 'shape' | 'breast' | 'hip';
-  title: string;
-  description: string;
-  keyConsiderations: string[];
 }
