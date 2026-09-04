@@ -30,7 +30,7 @@ export const App: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header activeTab={activeTab} onSelectTab={(tab) => setActiveTab(tab)} />
-      <main style={{ flex: 1 }}>{renderActiveRoute()}</main>
+      <main style={{ flex: 1, paddingBottom: '70px' }}>{renderActiveRoute()}</main>
       <Footer />
     </div>
   );
