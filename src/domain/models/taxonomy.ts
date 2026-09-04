@@ -1,21 +1,46 @@
-// Taxonomy Models - Decoupling Type, Construction, Fabric, and Performance
+// Taxonomy Models - Knowledge v1 Evidence Classification & Fit Variables
+
+export type EvidenceLevel =
+  | 'fact'               // Physical/construction property
+  | 'common_guidance'    // Widely observed guidance
+  | 'context_dependent'  // Heavily dependent on outer fabric/lighting
+  | 'brand_dependent'    // Manufacturer/sizing variation
+  | 'cannot_determine';  // Boundary condition
 
 export type CoverageLevel = 'full' | 'three_quarter' | 'half' | 'demi' | 'minimal' | 'varies';
 export type SupportLevel = 'high' | 'medium' | 'light' | 'varies';
 export type WireType = 'underwire' | 'wireless' | 'both_available';
 export type RiseType = 'high_waist' | 'mid_rise' | 'low_rise';
 
+// Body as a Fit-Variable System
+export interface BreastVariables {
+  fullness?: 'top' | 'bottom' | 'even';
+  spacing?: 'close_set' | 'wide_set' | 'average';
+  rootWidth?: 'narrow' | 'wide' | 'average';
+}
+
+export interface RibcageVariables {
+  underbustAnchor?: 'firm' | 'sensitive';
+  torsoHeight?: 'short' | 'average' | 'long';
+}
+
+export interface BodyFitVariables {
+  breast?: BreastVariables;
+  ribcage?: RibcageVariables;
+}
+
 export interface BraType {
   id: string;
   name: string;
   shortDescription: string;
-  typicalConstruction: string[];   // e.g., Molded cups, flat seams, side boning
-  coverageRange: CoverageLevel;    // Typical or varies
-  supportRange: SupportLevel;      // Varies by construction & fit
+  typicalConstruction: string[];
+  coverageRange: CoverageLevel;
+  supportRange: SupportLevel;
   wireOptions: WireType;
-  fabricOptions: string[];         // e.g., Cotton, Modal, Microfiber
-  usefulFor: string[];             // Situations or outerwear IDs where relevant
-  limitations: string[];           // Honest limitations (e.g. Invisibility not 100% guaranteed)
+  fabricOptions: string[];
+  usefulFor: string[];
+  limitations: string[];
+  evidenceLevel?: EvidenceLevel;
 }
 
 export interface PantyType {
@@ -28,15 +53,7 @@ export interface PantyType {
   fabricOptions: string[];
   usefulFor: string[];
   limitations: string[];
-}
-
-export interface FabricType {
-  id: string;
-  name: string;
-  description: string;
-  characteristics: string[];
-  bestForOccasions: string[];
-  careNotes: string;
+  evidenceLevel?: EvidenceLevel;
 }
 
 export interface OuterwearItem {
@@ -44,7 +61,7 @@ export interface OuterwearItem {
   name: string;
   category: 'traditional_indian' | 'casual' | 'formal' | 'active' | 'fitted';
   description: string;
-  keyConsiderations: string[]; // e.g., blouse back depth, side slits, opacity
+  keyConsiderations: string[];
 }
 
 export interface OccasionItem {

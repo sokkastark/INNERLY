@@ -6,7 +6,7 @@ import { OCCASIONS } from '../../data/occasions';
 import { FIT_PROBLEMS } from '../../data/problems';
 import { RecommendationCard } from '../../components/cards/RecommendationCard';
 import { Button } from '../../components/ui/Button';
-import { RefreshCw, Filter } from 'lucide-react';
+import { RefreshCw, Filter, HelpCircle } from 'lucide-react';
 
 export const MatchRoute: React.FC = () => {
   const [context, setContext] = useState<UserContext>({ scope: 'all' });
@@ -198,25 +198,44 @@ export const MatchRoute: React.FC = () => {
         )}
       </div>
 
+      {/* Insufficient Information Banner */}
+      {output.insufficientInfo && (
+        <div style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border-strong)', borderRadius: 'var(--radius-md)', padding: 'var(--space-lg)', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-md)' }}>
+          <HelpCircle size={24} color="var(--color-brand-primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <h3 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-brand-primary)', marginBottom: '4px' }}>
+              Select a situation above to begin
+            </h3>
+            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+              {output.insufficientInfoPrompt}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Summary Header */}
-      <div>
-        <h2 style={{ fontSize: 'var(--font-size-xl)' }}>
-          Guidance for: <span style={{ color: 'var(--color-brand-primary)' }}>{output.contextSummary}</span>
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
-          Relevant considerations categorized by relevance tier.
-        </p>
-      </div>
+      {!output.insufficientInfo && (
+        <div>
+          <h2 style={{ fontSize: 'var(--font-size-xl)' }}>
+            Guidance for: <span style={{ color: 'var(--color-brand-primary)' }}>{output.contextSummary}</span>
+          </h2>
+          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+            Relevant considerations categorized by relevance tier.
+          </p>
+        </div>
+      )}
 
       {/* Relevant Results Grid */}
-      <div className="grid sm:grid-cols-1 lg:grid-cols-2">
-        {relevantResults.map((res) => (
-          <RecommendationCard key={res.itemTypeId} result={res} />
-        ))}
-      </div>
+      {!output.insufficientInfo && (
+        <div className="grid sm:grid-cols-1 lg:grid-cols-2">
+          {relevantResults.map((res) => (
+            <RecommendationCard key={res.itemTypeId} result={res} />
+          ))}
+        </div>
+      )}
 
       {/* Collapsible Less Relevant Items */}
-      {lessRelevantResults.length > 0 && (
+      {!output.insufficientInfo && lessRelevantResults.length > 0 && (
         <div style={{ marginTop: 'var(--space-lg)' }}>
           <button
             onClick={() => setShowLessRelevant(!showLessRelevant)}
